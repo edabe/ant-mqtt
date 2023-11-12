@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "incyclist-ant-plus": "^0.2.0",
+    "memory-cache": "^0.2.0",
+    "mqtt": "^5.2.1"
+  }
+}
