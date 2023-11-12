@@ -15,15 +15,14 @@ const {
     FitnessEquipmentSensor,
 } = require('incyclist-ant-plus');
 const {AntDevice} = require('incyclist-ant-plus/lib/bindings');
-const antUtils = require('./antUtils');
 const mqtt = require('mqtt');
 const topicCache = require('memory-cache');
+const antUtils = require('./antUtils');
+const mqttAuth = require('./auth.json');
 
 // MQTT connection details
 const MQTT_SERVER_HOST = '192.168.1.64';
 const MQTT_SERVER_PORT = '1883';
-const MQTT_CLIENT_USER = 'mqtt_client';
-const MQTT_CLIENT_PASS = '1214-e1ua2e';
 const MQTT_MAIN_TOPIC = 'antplus';
 
 // Sleep
@@ -136,8 +135,8 @@ async function connectMqtt() {
     const options = {
         port: MQTT_SERVER_PORT,
         host: MQTT_SERVER_HOST,
-        username: MQTT_CLIENT_USER,
-        password: MQTT_CLIENT_PASS,
+        username: mqttAuth.mqttUser,
+        password: mqttAuth.mqttPass,
         protocol: 'mqtt'
     };
     let client = null;
@@ -189,7 +188,7 @@ async function main(deviceId=-1) {
             console.log('Failed to close ANT device');
         }
         try {
-            client.end(() => {
+            await client.end(() => {
                 console.log('MQTT client closed');
             });    
         }
