@@ -39,7 +39,7 @@ const ant = new AntDevice({startupTimeout:2000, debug:false, logger:console});
 
 // MQTT publish utils
 function getManufacturerName(manId) {
-    return antUtils.manufacturerId.get(manId) || manId;
+    return antUtils.manufacturerId.get(manId) || String(manId);
 }
 
 async function connectAnt(client) {
