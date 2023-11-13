@@ -30,7 +30,7 @@ const sleep = async () => new Promise(resolve => setTimeout(resolve, 5000));
 const CACHE_TTL = 60000;
 
 // ANT Stick
-const ant = new AntDevice({startupTimeout:2000/*,debug:true, logger:console*/});
+const ant = new AntDevice({startupTimeout:2000, debug:false, logger:console});
 
 // MQTT publish utils
 function getManufacturerName(manId) {
@@ -57,19 +57,23 @@ async function connectAnt(client) {
                 const newTopic = `${topic}/${value.name}`;
                 // console.log(`publishData: ${newTopic}: ${message[key]}`);    
                 client.publish(newTopic, data, publishOptions, (err) => {
-                    if (err)
+                    if (err) {
                         console.error(`publishData: Failed to publish: ${JSON.stringify(err)}`);
-                    else
+                    }
+                    else {
                         console.log(`publishData: Published ${newTopic}: ${data}`);
+                    }
                 });
                 if (value.cache) {
                     // cache topic to be updated after ttl
                     topicCache.put(newTopic, 0, CACHE_TTL, (cacheKey, cacheValue) => {
                         client.publish(cacheKey, cacheValue, publishOptions, (err) => {
-                            if (err)
-                            console.error(`publishData: Failed to clean cache: ${JSON.stringify(err)}`);
-                        else
-                            console.log(`publishData: Cache cleaned: ${newTopic}`);    
+                            if (err) {
+                                console.error(`publishData: Failed to clean cache: ${JSON.stringify(err)}`);
+                            }
+                            else {
+                            //    console.log(`publishData: Cache cleaned: ${newTopic}`);
+                            }
                         });
                     });
                 }
@@ -178,6 +182,7 @@ async function main(deviceId=-1) {
 
     // Clean up and exit
     async function onExit() {
+        topicCache.clear();
         console.log('\nTerminating Node program');
         try {
             ant.close();
