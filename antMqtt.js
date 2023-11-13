@@ -17,13 +17,18 @@ const {
 const {AntDevice} = require('incyclist-ant-plus/lib/bindings');
 const mqtt = require('mqtt');
 const topicCache = require('memory-cache');
+const config = require('config');
 const antUtils = require('./antUtils');
-const mqttAuth = require('./auth.json');
 
 // MQTT connection details
-const MQTT_SERVER_HOST = '192.168.1.64';
-const MQTT_SERVER_PORT = '1883';
-const MQTT_MAIN_TOPIC = 'antplus';
+const MQTT_SERVER_HOST = config.get('mqtt_config.server_host');
+const MQTT_SERVER_PORT = config.get('mqtt_config.server_port');
+const MQTT_CLIENT_USER = config.get('mqtt_config.client_user');
+const MQTT_CLIENT_PASS = config.get('mqtt_config.client_password');
+const MQTT_MAIN_TOPIC = config.get('mqtt_config.topic');
+
+// ANT allowed devices
+const ANT_ALLOWED = config.get('allowed_devices');
 
 // Sleep
 const sleep = async () => new Promise(resolve => setTimeout(resolve, 5000));
@@ -139,8 +144,8 @@ async function connectMqtt() {
     const options = {
         port: MQTT_SERVER_PORT,
         host: MQTT_SERVER_HOST,
-        username: mqttAuth.mqttUser,
-        password: mqttAuth.mqttPass,
+        username: MQTT_CLIENT_USER,
+        password: MQTT_CLIENT_PASS,
         protocol: 'mqtt'
     };
     let client = null;
@@ -172,7 +177,7 @@ async function connectMqtt() {
 }
 
 // Main function
-async function main(deviceId=-1) {
+async function main() {
     console.log('Starting...');
     // Connect to the MQTT server
     const client = await connectMqtt();
@@ -208,7 +213,4 @@ async function main(deviceId=-1) {
     process.on('SIGTERM', async () => await onExit());
 }
 
-const args = process.argv.slice(2);
-const deviceId = args.length>0 ? args[0] : undefined;
-
-main( deviceId );
+main();

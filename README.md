@@ -47,11 +47,16 @@ My MQTT server is a Mosquitto broker running on a separate HomeAsistant setup.
 
 
 #### Configuration
-Create a file `auth.json` with the following MQTT client credentials:
+Create a file `config/default.json` with the following configuration adjusted to your system:
 ```
 {
-  "mqttUser": "<mqtt_client>",
-  "mqttPass": "<client_password>"
+    "mqtt_config": {
+        "server_host": "<mqtt_server_host>",
+        "server_port": "<mqtt_server_port>",
+        "client_user": "<mqtt_client_username>",
+        "client_password": "<mqtt_client_password>",
+        "topic": "antplus"
+    }
 }
 ```
 
