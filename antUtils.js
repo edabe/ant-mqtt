@@ -3,6 +3,7 @@ module.exports = {
         [1, 'garmin'],
         [6, 'srm'],
         [7, 'quarq'],
+        [13, 'dynastream_oem'],
         [23, 'suunto'],
         [32, 'wahoo_fitness'],
         [41, 'shimano'],
