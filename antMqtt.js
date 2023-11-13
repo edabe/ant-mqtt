@@ -61,7 +61,7 @@ async function connectAnt(client) {
                         console.error(`publishData: Failed to publish: ${JSON.stringify(err)}`);
                     }
                     else {
-                        console.log(`publishData: Published ${newTopic}: ${data}`);
+                        // console.log(`publishData: Published ${newTopic}: ${data}`);
                     }
                 });
                 if (value.cache) {
