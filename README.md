@@ -47,5 +47,50 @@ My MQTT server is a Mosquitto broker running on a separate HomeAsistant setup.
 
 
 #### Configuration
+Create a file `auth.json` with the following MQTT client credentials:
+```
+{
+  "mqttUser": "<mqtt_client>",
+  "mqttPass": "<client_password>"
+}
+```
 
-#### Running
+Then build and run the application:
+```
+eabe@rpi:~ $ npm install
+eabe@rpi:~ $ node antMqtt.js
+```
+
+#### Running at startup
+- Create an autostart of the `antMqtt.js` application with the contents of the [init-script-template](https://github.com/fhd/init-script-template/blob/master/template)
+  ```
+  eabe@rpi:~ $ sudo vi /etc/init.d/ant_mqtt
+  ```
+  - Note that the directory, command and user should be configured as such:
+    ```
+    dir="/home/eabe/antplus/ant-mqtt"
+    cmd="node antMqtt.js"
+    user="eabe"
+    ```
+- Make the script executable
+  ```
+  eabe@rpi:~ $ sudo chmod 755 /etc/init.d/ant_mqtt 
+  ```
+- Activate the autostart
+  ```
+  eabe@rpi:~ $ sudo update-rc.d ant_mqtt defaults
+  ```
+- Reboot the Raspberry pi to ensure the autostart worked
+  ```
+  eabe@rpi:~ $ ps -ef |grep antMqtt
+  root         546       1  0 19:23 ?        00:00:00 sudo -u eabe node antMqtt.js
+  eabe         602     546  5 19:23 ?        00:00:02 node antMqtt.js
+  eabe        1876    1489  0 19:24 pts/0    00:00:00 grep --color=auto antMqtt
+  ```
+
+You can now start, stop and restart the app manually as well
+```
+sudo /etc/init.d/ant_mqtt start
+sudo /etc/init.d/ant_mqtt stop
+sudo /etc/init.d/ant_mqtt restart
+```
